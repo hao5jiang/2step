@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>双耳渲染盲听实验室｜身份与偏好测试</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar"><div class="brand"><span class="brandmark">◉</span> A/B LISTENING LAB</div><span class="privacy">音频仅在本机处理</span></header>
+    <section class="hero"><div class="eyebrow">ED SHEERAN · 2STEP · APL VIRTUOSO</div><h1 id="heroTitle">你能听出<br><em>哪段经过双耳渲染</em>吗？</h1><p id="heroText">每轮听同一时间点的 A 与 B，然后指出经过 APL 双耳渲染的版本。A/B 身份每轮重新随机分配，作答后才揭晓。</p></section>
+    <section class="setup card" id="setup">
+      <div class="sectionline"><span>01 / 选择测试</span><span>耳机聆听 · 保持音量不变</span></div>
+      <div class="sourcepick testpick"><button id="kindIdentity" class="sourcebtn selected" type="button"><strong>身份辨认</strong><small>哪段经过双耳渲染？</small></button><button id="kindPreference" class="sourcebtn" type="button"><strong>听感偏好</strong><small>双声道与多声道，哪个更舒服？</small></button></div>
+      <div class="sectionline sourceheading"><span>02 / 选择素材</span></div>
+      <div class="sourcepick"><button id="useDefault" class="sourcebtn selected" type="button"><strong>默认试听</strong><small id="defaultPairLabel">《2step》双耳渲染 / Bypassed</small></button><button id="useCustom" class="sourcebtn" type="button"><strong>自选素材</strong><small>从你的设备载入两份录音</small></button></div>
+      <p id="defaultInfo" class="hint">默认试听使用新版双声道双耳渲染录音与此前的 Bypassed 录音。身份测试会给双耳版额外 +0.6 dB 播放增益；音量可能成为判断线索。</p>
+      <div class="filegrid hidden" id="customFiles">
+        <label class="filebox"><span class="fileicon">↗</span><strong id="primaryLabel">双耳渲染版</strong><small id="primaryName">选择第一份音频文件</small><input id="primaryFile" type="file" accept="audio/*,.flac,.wav,.m4a,.mp3"></label>
+        <label class="filebox"><span class="fileicon">↗</span><strong id="secondaryLabel">Bypassed 版</strong><small id="secondaryName">选择第二份音频文件</small><input id="secondaryFile" type="file" accept="audio/*,.flac,.wav,.m4a,.mp3"></label>
+      </div>
+      <p id="customInfo" class="hint hidden">请选择同一段内容的两份立体声录音。网页会按每段平均电平匹配播放音量；如果录音起点不同，请先在音频软件中对齐。</p>
+      <div class="setupbottom"><div class="mode"><button class="modebtn selected" data-mode="focus" type="button">重点 12 段</button><button class="modebtn" data-mode="all" type="button">全曲 18 段</button></div><button id="start" class="primary" disabled type="button">开始盲测 <span>→</span></button></div>
+      <p id="loadStatus" class="status" role="status">正在检查默认音频…</p>
+    </section>
+    <section class="test card hidden" id="test">
+      <div class="sectionline"><span id="progress">02 / 第 1 段</span><span id="timeLabel">00:04 — 00:12</span></div>
+      <div class="progressbar"><div id="progressFill"></div></div>
+      <h2 id="testQuestion">双耳渲染的是哪段？</h2><p class="sub" id="testHint">可以反复切换播放。作答前不会显示身份。</p>
+      <div class="compare">
+        <div class="listen-channel"><button id="playA" class="play" type="button"><span class="playicon">▶</span><strong>A</strong><small>点击播放</small></button><label class="volume-label" for="volumeA"><span>A 音量</span><output id="volumeValueA">+0 dB</output></label><input id="volumeA" class="volume-slider" type="range" min="-12" max="12" step="0.5" value="0"><span class="volume-scale">−12 dB <span>0</span> +12 dB</span></div>
+        <div class="listen-channel"><button id="playB" class="play" type="button"><span class="playicon">▶</span><strong>B</strong><small>点击播放</small></button><label class="volume-label" for="volumeB"><span>B 音量</span><output id="volumeValueB">+0 dB</output></label><input id="volumeB" class="volume-slider" type="range" min="-12" max="12" step="0.5" value="0"><span class="volume-scale">−12 dB <span>0</span> +12 dB</span></div>
+      </div>
+      <p id="volumeSafety" class="volume-safety" role="status">每段音量从 0 dB 开始。站内输出峰值保留至少 3 dB 余量。</p>
+      <div class="answer"><span id="answerPrompt">我的判断：双耳渲染是</span><button id="chooseA" type="button">A</button><button id="chooseB" type="button">B</button><button id="chooseUnsure" class="hidden" type="button">不确定哪个好</button></div>
+      <div id="feedback" class="feedback hidden" role="status"></div>
+      <button id="next" class="primary next hidden" type="button">下一段 <span>→</span></button>
+      <button id="backFromTest" class="textbutton" type="button">返回测试设置</button>
+    </section>
+    <section class="result card hidden" id="result"><div class="sectionline"><span>03 / 测试完成</span><span id="resultKind">身份识别</span></div><div class="score" id="score"></div><h2 id="resultTitle"></h2><p id="resultText"></p><div id="trialList" class="triallist"></div><div class="resultActions"><button id="again" class="primary" type="button">重新随机测试 <span>↻</span></button><button id="backFromResult" class="textbutton" type="button">换一种测试</button></div></section>
+    <footer><strong>测试说明</strong><p>两种测试都能分别调节 A 和 B 的相对音量，范围为 −12 至 +12 dB，每段重新归零。提高音量触及安全上限时，网页会同时降低 A/B 的实际输出，以保留相对音量差；站内解码音频的数字样本峰值保持在 −3 dBFS 以下。</p><p>身份辨认测试要求指出双耳渲染版；该模式默认给双耳版额外 +0.6 dB，可能形成音量线索，因此成绩不代表严格等响的身份识别能力。听感偏好测试没有正确答案；“不确定哪个好”会单独统计。两种模式的 A/B 身份都会逐段随机分配。</p><p>默认试听音频由网站提供。自选素材只在你的浏览器中读取，不会上传；测试记录只留在本页，关闭页面即消失。建议使用耳机，关闭额外空间音频与音效。</p></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
